@@ -20,12 +20,12 @@ steps:
         'demo-shiny',
         '--image',
         'gcr.io/augusto-hassel/demo-shiny',
-        '--region',
-        'us-central1',
+        '--cluster',
+        'my-first-cluster-1',
+        '--cluster-location',
+        'us-central1-c',
         '--platform',
-        'managed',
-        '--quiet',
-  	    '--allow-unauthenticated'
+  	    'gke'
       ]
 images:
   - gcr.io/augusto-hassel/demo-shiny
