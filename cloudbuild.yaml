@@ -1,0 +1,32 @@
+# cloudbuild.yaml
+
+# Replace $PROJECT_ID with your GCP project ID
+# Replace [SERVICE-NAME] with the desired Cloud Run service name (e.g. hello-world)
+# Replace [REGION] with the GCP region you are deploying to (e.g. asia-northeast1)
+
+steps:
+    # build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-f',  'Dockerfile','-t', 'gcr.io/augusto-hassel/demo-rRofex-shiny', '.']
+    # push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/augusto-hassel/demo-rRofex-shiny']
+    # Deploy container image to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      [
+        'run',
+        'deploy',
+        'demo-rRofex-shiny',
+        '--image',
+        'gcr.io/augusto-hassel/demo-rRofex-shiny',
+        '--region',
+        'us-central1',
+        '--platform',
+        'managed',
+        '--quiet'
+      ]
+images:
+  - gcr.io/augusto-hassel/demo-rRofex-shiny
+
+timeout: 14400s

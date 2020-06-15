@@ -1,5 +1,3 @@
-# Librerias -------------------------------------------------------------------
-
 paquetes <- list(
   "Shiny Core" = list("shiny", "bs4Dash"),
   "Shiny Extras" = list("shinyjs", "shinyWidgets"),
@@ -8,15 +6,12 @@ paquetes <- list(
   "Tidyverse" = list("tidyverse", "lubridate", "glue"),
   "Generales" = list("rRofex", "quantmod", "log4r")
 )
+
 lapply(as.list(c(paquetes, recursive = T, use.names = F)),
        function(x) {
-         if (x %in% rownames(installed.packages()) == FALSE) {
-           install.packages(x, verbose = F)
-         }
          library(x, character.only = T, verbose = F)
        })
 rm(list = c("paquetes"))
-
 
 # Funciones ---------------------------------------------------------------
 
