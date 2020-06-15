@@ -7,27 +7,27 @@
 steps:
     # build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-f',  'Dockerfile','-t', 'gcr.io/augusto-hassel/demo-rRofex-shiny', '.']
+    args: ['build', '-f',  'Dockerfile','-t', 'gcr.io/augusto-hassel/demo-shiny', '.']
     # push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/augusto-hassel/demo-rRofex-shiny']
+    args: ['push', 'gcr.io/augusto-hassel/demo-shiny']
     # Deploy container image to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
       [
         'run',
         'deploy',
-        'demo-rRofex-shiny',
+        'demo-shiny',
         '--image',
-        'gcr.io/augusto-hassel/demo-rRofex-shiny',
+        'gcr.io/augusto-hassel/demo-shiny',
         '--region',
         'us-central1',
         '--platform',
         'managed',
         '--quiet',
-  	'--allow-unauthenticated'
+  	    '--allow-unauthenticated'
       ]
 images:
-  - gcr.io/augusto-hassel/demo-rRofex-shiny
+  - gcr.io/augusto-hassel/demo-shiny
 
 timeout: 14400s
