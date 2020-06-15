@@ -24,7 +24,8 @@ steps:
         'us-central1',
         '--platform',
         'managed',
-        '--quiet'
+        '--quiet',
+  	'--allow-unauthenticated'
       ]
 images:
   - gcr.io/augusto-hassel/demo-rRofex-shiny
