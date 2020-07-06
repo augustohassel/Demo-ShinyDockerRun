@@ -60,6 +60,7 @@ server <- function(input, output, session) {
   # 2. Gráficos -----
 
   global_graficos <- reactiveValues(data = NULL)
+  environment_graficos_iniciar <- rlang::env()
 
   output$ui_graficos_producto <- renderUI({
     progressSweetAlert(session = session, id = "progress_ui_graficos_producto", title = tagList("Buscando productos...", bs4Loading()), display_pct = T, value = 0, striped = T, status = "primary")
@@ -83,15 +84,21 @@ server <- function(input, output, session) {
     if (is.null(global_connection$conn)) {
       sendSweetAlert(session = session, title = HTML("Mmm..."), text = HTML("Tenes que conectarte primero..."),  type = "warning", html = TRUE)
     } else {
-      trading_ws_md(connection = global_connection$conn, destination = "data", symbol = input$graficos_producto, entries = list("LA"), listen_to = list("LA_price"))
+
+      trading_ws_md(connection = global_connection$conn,
+                    destination = "data",
+                    symbol = input$graficos_producto,
+                    entries = list("LA"),
+                    listen_to = list("LA_price"),
+                    where_is_env = environment_graficos_iniciar)
 
       global_graficos$data <- reactivePoll(intervalMillis = 1000,
                                            session = session,
                                            checkFunc = function() {
-                                             if (!is.null(data)) max(data$timestamp)
+                                             if (!is.null(environment_graficos_iniciar$data)) max(environment_graficos_iniciar$data$timestamp)
                                            },
                                            valueFunc = function() {
-                                             return(data)
+                                             return(environment_graficos_iniciar$data)
                                            })
     }
   })
@@ -107,8 +114,8 @@ server <- function(input, output, session) {
     if (is.null(global_graficos$data)) {
       sendSweetAlert(session = session, title = HTML("Mmm..."), text = HTML("No hay conexi&oacute;n activa..."),  type = "warning", html = TRUE)
     } else {
-      try(trading_ws_close(close_all = FALSE, selection = list("data")))
-      data <<- NULL
+      try(trading_ws_close(close_all = FALSE, selection = list("data"), where_is_env = environment_graficos_iniciar))
+      environment_graficos_iniciar$data <- NULL
       sendSweetAlert(session = session, title = HTML("Ok!"), text = HTML("Se ha eliminado la informaci&oacute;n!"),  type = "success", html = TRUE)
     }
   })
@@ -124,8 +131,6 @@ server <- function(input, output, session) {
     progressSweetAlert(session = session, id = "progress_ccl_productos", title = tagList("Buscando productos para CCL", bs4Loading()), display_pct = T, value = 0, striped = T, status = "primary")
 
     productos <- global_productos()
-
-    source(file = "data/adrs.R")
 
     updateProgressBar(session = session, id = "progress_ccl_productos", value = 30, status = "success")
 
@@ -267,6 +272,8 @@ server <- function(input, output, session) {
 
   # 4.1 The Molesto -----
 
+  environment_the_molesto <- rlang::env()
+
   global_algoritmos_1 <- reactiveValues(data = NULL)
 
   output$ui_algoritmos_1_producto <- renderUI({
@@ -300,7 +307,8 @@ server <- function(input, output, session) {
         trading_ws_md(connection = global_connection$conn,
                       destination = "data_algoritmos_1",
                       symbol = input$algoritmos_1_producto,
-                      entries = list("BI", "OF"))
+                      entries = list("BI", "OF"),
+                      where_is_env = environment_the_molesto)
 
         if (!dir.exists("logs")) {
           dir.create("logs")
@@ -315,10 +323,10 @@ server <- function(input, output, session) {
         global_algoritmos_1$data <- reactivePoll(intervalMillis = 2000,
                                                  session = session,
                                                  checkFunc = function() {
-                                                   if (!is.null(data_algoritmos_1)) max(data_algoritmos_1$timestamp)
+                                                   if (!is.null(environment_the_molesto$data_algoritmos_1)) max(environment_the_molesto$data_algoritmos_1$timestamp)
                                                  },
                                                  valueFunc = function() {
-                                                   return(last(data_algoritmos_1))
+                                                   return(last(environment_the_molesto$data_algoritmos_1))
                                                  })
 
         output$algoritmos_1_logs <- reactiveFileReader(intervalMillis = 2000,
@@ -341,8 +349,8 @@ server <- function(input, output, session) {
 
   observeEvent(input$algoritmos_1_parar, {
     if (file.exists(glue("logs/the_molesto_{input$algoritmos_1_producto}_{Sys.Date()}.log")) & input$algoritmos_1_status == TRUE) {
-      try(trading_ws_close(close_all = FALSE, selection = list("data_algoritmos_1"))) # cierro conexion
-      data_algoritmos_1 <<- NULL # elimino data
+      try(trading_ws_close(close_all = FALSE, selection = list("data_algoritmos_1"), where_is_env = environment_the_molesto)) # cierro conexion
+      environment_the_molesto$data_algoritmos_1 <- NULL # elimino data
       logger_algoritmos_1 <- create.logger(logfile = glue("logs/the_molesto_{input$algoritmos_1_producto}_{Sys.Date()}.log"), level = "INFO") # creo nuevamente el objecto (podria haber creado un reactiveVal...)
       info(logger_algoritmos_1, str_c("- [FIN]")) # doy fin en los logs
       shinyjs::click("algoritmos_1_logs_download") # descargo los logs

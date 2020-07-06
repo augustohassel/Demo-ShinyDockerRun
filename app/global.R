@@ -4,7 +4,7 @@ paquetes <- list(
   "Plotting" = list("plotly"),
   "Tables" = list("DT"),
   "Tidyverse" = list("tidyverse", "lubridate", "glue"),
-  "Generales" = list("rRofex", "quantmod", "log4r")
+  "Generales" = list("rRofex", "quantmod", "log4r", "rlang")
 )
 
 lapply(as.list(c(paquetes, recursive = T, use.names = F)),
@@ -39,3 +39,5 @@ ccl <- function(connection, data) {
 
   return(data)
 }
+
+source(file = "data/adrs.R")
