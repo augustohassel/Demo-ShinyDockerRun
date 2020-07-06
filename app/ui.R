@@ -79,23 +79,9 @@ ui <- bs4DashPage(sidebar = bs4DashSidebar(title = "rRofex",
                       ),
                       bs4TabItem(tabName = "algoritmos",
                                  fluidRow(
-                                   bs4Table(cardWrap = TRUE,
-                                            headTitles = c("", "ALGORITMO", "STATUS", "ACCIÓN"),
-                                            bordered = TRUE,
-                                            striped = TRUE,
-                                            width = 4,
-                                            bs4TableItems(
-                                              bs4TableItem(icon("angry"), dataCell = TRUE),
-                                              bs4TableItem("The Molesto", dataCell = TRUE),
-                                              bs4TableItem(switchInput(inputId = "algoritmos_1_status", onStatus = "success", offStatus = "danger", label = "Live", value = FALSE, inline = FALSE, size = "small", disabled = TRUE), dataCell = TRUE),
-                                              bs4TableItem(div(actionButton("algoritmos_1_iniciar", "Iniciar", icon = icon("play"), style = "background-color:forestgreen; color:white"),
-                                                               actionButton("algoritmos_1_parar", "Parar", icon = icon("stop"), style = "background-color:indianred; color:white"),
-                                                               align = "right"), dataCell = TRUE)
-                                            )
-                                   ),
                                    bs4TabCard(id = "algoritmos_left",
                                               title = "",
-                                              width = 8,
+                                              width = 5,
                                               collapsible = FALSE,
                                               closable = FALSE,
                                               maximizable = FALSE,
@@ -114,6 +100,20 @@ ui <- bs4DashPage(sidebar = bs4DashSidebar(title = "rRofex",
                                                             )
                                                           )
                                               )
+                                   ),
+                                   bs4Table(cardWrap = TRUE,
+                                            headTitles = c("", "ALGORITMO", "STATUS", "ACCIÓN"),
+                                            bordered = TRUE,
+                                            striped = TRUE,
+                                            width = 6,
+                                            bs4TableItems(
+                                              bs4TableItem(icon("angry"), dataCell = TRUE),
+                                              bs4TableItem("The Molesto", dataCell = TRUE),
+                                              bs4TableItem(switchInput(inputId = "algoritmos_1_status", onStatus = "success", offStatus = "danger", label = "Live", value = FALSE, inline = FALSE, size = "small", disabled = TRUE), dataCell = TRUE),
+                                              bs4TableItem(div(actionButton("algoritmos_1_iniciar", "Iniciar", icon = icon("play"), style = "background-color:forestgreen; color:white"),
+                                                               actionButton("algoritmos_1_parar", "Parar", icon = icon("stop"), style = "background-color:indianred; color:white"),
+                                                               align = "right"), dataCell = TRUE)
+                                            )
                                    )
                                  )
                       )
