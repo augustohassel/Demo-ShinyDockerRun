@@ -105,7 +105,7 @@ ui <- bs4DashPage(sidebar = bs4DashSidebar(title = "rRofex",
                                             headTitles = c("", "ALGORITMO", "STATUS", "ACCIÓN"),
                                             bordered = TRUE,
                                             striped = TRUE,
-                                            width = 6,
+                                            width = 7,
                                             bs4TableItems(
                                               bs4TableItem(icon("angry"), dataCell = TRUE),
                                               bs4TableItem("The Molesto", dataCell = TRUE),
